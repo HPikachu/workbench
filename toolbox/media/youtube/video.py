@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Callable, List
+from typing import Optional, Callable, List, Any
 
 import yt_dlp
 
@@ -17,8 +17,8 @@ class YoutubeDownloader(object):
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-    def _build_base_options(self) -> dict:
-        options = {
+    def _build_base_options(self) -> dict[str, Any]:
+        options: dict[str, Any] = {
             "outtmpl": str(self.output_dir / "%(title)s.%(ext)s"),
             "extractor_args": {
                 "youtube": {
@@ -72,12 +72,13 @@ class YoutubeDownloader(object):
 
         if download_subtitles:
             options.update({
-                "writesubtitles": False,
-                "writeautomaticsub": False,
-                "subtitleslangs": subtitle_languages or [
-                    "zh-Hans",
-                    "zh-Hant",
-                ],
+                "writesubtitles": True,
+                "writeautomaticsub": True,
+                "subtitleslangs": subtitle_languages or [r"zh-(?:Hans|CN)"],
+                "postprocessors": [{
+                    "key": "FFmpegEmbedSubtitle",
+                    "already_have_subtitle": False,
+                }],
             })
 
         with yt_dlp.YoutubeDL(options) as ydl:
