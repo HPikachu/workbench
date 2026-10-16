@@ -46,8 +46,10 @@ class SnowMDownloader:
                 "key": "FFmpegVideoRemuxer",
                 "preferedformat": "mp4",
             }],
-            "concurrent_fragment_downloads": 30,
+            "concurrent_fragment_downloads": 15,
             "fragment_retries": 25,
+            "retries": 5,
+            "retry_sleep_functions": 3,
             "skip_unavailable_fragments": False,
             "noplaylist": True,
             # A custom logger would turn native terminal progress into log lines.
